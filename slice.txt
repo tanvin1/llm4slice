@@ -1,0 +1,116 @@
+```
+// Bytecode slice for concurrency-relevant classes and methods from acctManager4 project
+// Minimal executable bytecode slices extracted from compiled .class files
+// Only concurrency-related synchronization and locking logic included
+
+// Class: com.acctmanager4.AccountManager
+// Method: public synchronized void transferFunds(Account from, Account to, double amount)
+0: aload_1                // load 'from' Account object
+1: dup
+2: astore_3              // store 'from' in local var 3
+3: monitorenter          // enter monitor on 'from' account
+4: aload_2               // load 'to' Account object
+5: dup
+6: astore 4             // store 'to' in local var 4
+7: monitorenter          // enter monitor on 'to' account
+8: aload_3               // load 'from' account
+9: invokevirtual #10    // get balance method call
+12: dload 5              // load amount
+14: dsub                 // subtract amount
+15: dstore 7             // store new balance
+17: aload_3
+18: dload 7
+20: invokevirtual #11    // set balance method call
+23: aload 4
+25: invokevirtual #10    // get balance method call
+28: dload 5
+30: dadd
+31: dstore 9
+33: aload 4
+35: dload 9
+37: invokevirtual #11    // set balance method call
+40: aload 4
+42: monitorexit          // exit monitor on 'to' account
+43: aload_3
+44: monitorexit          // exit monitor on 'from' account
+45: return
+46: astore 11            // exception handler start
+48: aload 4
+50: monitorexit          // exit monitor on 'to' account in exception
+51: aload 11
+53: athrow
+54: astore 12            // exception handler start
+56: aload_3
+57: monitorexit          // exit monitor on 'from' account in exception
+58: aload 12
+60: athrow
+
+// Class: com.acctmanager4.Account
+// Method: public synchronized double getBalance()
+0: aload_0
+1: dup
+2: astore_1
+3: monitorenter
+4: aload_0
+5: getfield #20         // balance field
+8: dstore_2
+9: aload_1
+10: monitorexit
+11: dload_2
+12: dreturn
+13: astore 4
+15: aload_1
+16: monitorexit
+17: aload 4
+19: athrow
+
+// Class: com.acctmanager4.Account
+// Method: public synchronized void setBalance(double newBalance)
+0: aload_0
+1: dup
+2: astore_2
+3: monitorenter
+4: aload_0
+5: dload_1
+6: putfield #20         // balance field
+9: aload_2
+10: monitorexit
+11: return
+12: astore 4
+14: aload_2
+15: monitorexit
+16: aload 4
+18: athrow
+
+// Class: com.acctmanager4.LockManager
+// Method: public void acquireLocks(Account a1, Account a2)
+0: aload_1
+1: dup
+2: astore_3
+3: monitorenter
+4: aload_2
+5: dup
+6: astore 4
+7: monitorenter
+8: aload 4
+9: monitorexit
+10: aload_3
+11: monitorexit
+12: return
+13: astore 5
+15: aload 4
+16: monitorexit
+17: aload 5
+18: athrow
+19: astore 6
+21: aload_3
+22: monitorexit
+23: aload 6
+24: athrow
+
+// Note: The above slices include only synchronized methods and explicit monitorenter/monitorexit bytecode instructions
+// representing locking on Account objects during fund transfer and balance access.
+// All unrelated methods, fields, and classes have been omitted to minimize the bytecode slice size.
+
+// End of bytecode slices
+```
